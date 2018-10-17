@@ -8,15 +8,12 @@ def randomHero():
     label["text"] = lst_of_heroes[number]
     print(number)
 
-def clicked():
-    randomHero()
-
 root = Tk()
 
 label = Label(master=root, text='', height=2)
 label.pack()
 
-button = Button(master=root, text='Druk hier', command=clicked)
+button = Button(master=root, text='Druk hier', command=randomHero)
 button.pack(pady=10)
 
 entry = Entry(master=root)
