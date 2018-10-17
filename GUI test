@@ -1,0 +1,25 @@
+from tkinter import *
+import random
+
+def randomHero():
+    'Deze functie werkt met een lijst van 10 heroes afkomstig uit de API. Vervolgens wordt uit deze API 10 heroes gekozen en hiervoor wordt een willekeurige geselecteerd'
+    lst_of_heroes = ['Hero 1', 'Hero 2', 'Hero 3', 'Hero 4', 'Hero 5', 'Hero 6', 'Hero 7', 'Hero 8', 'Hero 9', 'Hero 10'] #Deze data moet van de API komen!
+    number = random.randint(0,9)
+    label["text"] = lst_of_heroes[number]
+    print(number)
+
+def clicked():
+    randomHero()
+
+root = Tk()
+
+label = Label(master=root, text='', height=2)
+label.pack()
+
+button = Button(master=root, text='Druk hier', command=clicked)
+button.pack(pady=10)
+
+entry = Entry(master=root)
+entry.pack(padx=10, pady=10)
+
+root.mainloop()
