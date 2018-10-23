@@ -64,7 +64,7 @@ loginbutton.pack(side=RIGHT, padx=20, pady=20)
 #Code voor het spelscherm
 hoofdframe = Frame(master=root)
 hoofdframe.pack(fill="both", expand=True)
-hintbutton = Button(master=hoofdframe, text='Nieuwe hint (-3 punten!)', command=puntenaftrek())
+hintbutton = Button(master=hoofdframe, text='Nieuwe hint (-3 punten!)', command=lambda:[puntenaftrek(),showpoints()])
 hintbutton.pack(side=LEFT, padx=20, pady=20)
 
 
