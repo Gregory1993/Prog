@@ -22,7 +22,7 @@ while True:
     # om de JSON leesbaar te printen...
     json_leesbaar = json.dumps(jsontext, sort_keys=True, indent=4)
 
-    with open('apitext.json', 'w') as myfile:
+    with open('apitext.json', 'a') as myfile:
         myfile.write(json_leesbaar)
 
     print("\nGevonden characters in comics:")
@@ -44,4 +44,3 @@ while True:
     if counter == 1500:
         break
 
-#TODO: de while loop mooier maken, andere informatie uit API halen, informatie uit json file ordenen
