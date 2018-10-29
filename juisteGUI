@@ -65,7 +65,6 @@ def textweg():
     T.pack_forget()
 
 root = Tk()
-
 T = Text(root, height=2, width=30)
 T.pack()
 T.insert(END, "Vul je naam in")
@@ -84,7 +83,13 @@ loginbutton = Button(master=loginframe, text='View Highscore', command=highscore
 loginbutton.pack(side=RIGHT, padx=20, pady=20)
 
 #Code voor het spelscherm
+plaatje = PhotoImage(file='1.gif')
+label = Label(image=plaatje)
+label.image = plaatje
+label.pack()
 hoofdframe = Frame(master=root)
+loginfield = Entry(master=hoofdframe, text='API call hier')
+loginfield.pack(padx=20, pady=20)
 hoofdframe.pack(fill="both", expand=True)
 hintbutton = Button(master=hoofdframe, text='Nieuwe hint (-3 punten!)', command=lambda:[puntenaftrek(),showpoints(True),checkpoints(points)])
 hintbutton.pack(side=LEFT, padx=20, pady=20)
