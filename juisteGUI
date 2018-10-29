@@ -1,4 +1,35 @@
- 'Laat de puntentelling zien op het spelscherm'
+from tkinter import *
+from tkinter.messagebox import showinfo
+
+points = 25
+
+global pointCount
+global playerName
+
+def toonLoginFrame():
+    'Dit is het beginscherm'
+    hoofdframe.pack_forget()
+    loginframe.pack()
+
+def toonHoofdFrame():
+    'Dit is het spelscherm'
+    loginframe.pack_forget()
+    hoofdframe.pack()
+
+def login():
+    'Vraagt om de spelernaam'
+    global playerName
+    playerName = loginfield.get()
+    toonHoofdFrame()
+
+
+def highscore():
+    'Pop-up met de highscore'
+    bericht = 'Highscore hier!'
+    showinfo(title='popup', message=bericht)
+
+def showpoints(destroy = False):
+    'Laat de puntentelling zien op het spelscherm'
     T.pack_forget()
     global pointCount
     if destroy:
