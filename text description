@@ -1,0 +1,13 @@
+def text(destroy = False):
+    'Laat de puntentelling zien op het spelscherm'
+    T.pack_forget()
+    global pointCount
+    if destroy:
+        pointCount.pack_forget()
+    pointCount = Text(root, height=2, width=30, pady=10)
+    pointCount.pack()
+    pointCount.insert(END, "Text hier")
+    pointCount.config(state=DISABLED)
+    pointCount.tag_configure("center", justify='center')
+    pointCount.tag_add("center", 1.0, "end")
+    pointCount.place(relx=1, x=-2, y=2, anchor=NE)
