@@ -41,6 +41,7 @@ for item in jsontext['data']['results']:
     print(item['name'])
 
 with open('api_data.json', 'w') as file:
+    # de paths om series, stories en commics uit de API te halen
     getal = 0
     for item in jsontext['data']['results']:
         file.write(item['name'] + '\n')
