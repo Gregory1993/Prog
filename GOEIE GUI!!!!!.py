@@ -48,8 +48,8 @@ def eersteHint():
 def nieuweHint():
     global gebruikteHints
     with open('Hero.json') as read:
+        data = json.load(read)
         while True:
-            data = json.load(read)
             randomGetal = random.randrange(0,3)
             randomStorieComicSerie = ['comics', 'series', 'stories']
             lst = randomStorieComicSerie[randomGetal]
@@ -62,6 +62,7 @@ def nieuweHint():
                 continue
             else:
                 gebruikteHints.append(hint)
+                print('De hero komt voor in de ' + lst + ' :')
                 print(hint)
                 break
 

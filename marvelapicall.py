@@ -34,21 +34,14 @@ while True:
                     if int(item['series']['available']) >= 2:
                         if int(item['stories']['available']) >= 2:
                             print('hero gevonden')
-                            file.write(item['name'] + ';' + str(item['description']) + '\n')
-                            file.write('-----------------------Available Commics: ' + str(item['comics']['available']) + '-----------------------------\n')
                             all_comics = []
                             all_series = []
                             all_stories = []
                             for comics in item['comics']['items']:
                                 all_comics.append({'name': comics['name']},)
-                                file.write(comics['name'] + '\n')
-                            file.write('-----------------------Available Series: ' + str(item['series']['available']) + '------------------------------\n')
                             for series in item['series']['items']:
-                                file.write(series['name'] + '\n')
                                 all_series.append({'name': series['name']}, )
-                            file.write('-----------------------Available Stories: ' + str(item['stories']['available']) + '----------------------------\n')
                             for stories in item['stories']['items']:
-                                file.write(stories['name'] + '\n')
                                 all_stories.append({'name': stories['name']}, )
                             data = {'hero': {'name': item['name'], 'description': item['description'],
                                              'comics': {'appearances': item['comics']['available'], 'items': all_comics},
