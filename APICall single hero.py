@@ -51,9 +51,9 @@ while True:
                                 file.write(stories['name'] + '\n')
                                 all_stories.append({'name': stories['name']}, )
                             data = {'hero': {'name': item['name'], 'description': item['description'],
-                                             'comic': {'appearances comics': item['comics']['available'], 'items': all_comics},
-                                             'series': {'appearances series': item['series']['available'], 'items': [all_series]},
-                                             'stories': {'appearances stories': item['stories']['available'], 'items': [all_stories]
+                                             'comics': {'appearances': item['comics']['available'], 'items': all_comics},
+                                             'series': {'appearances': item['series']['available'], 'items': all_series},
+                                             'stories': {'appearances': item['stories']['available'], 'items': all_stories
                                                          }
                                              }
                                     }
