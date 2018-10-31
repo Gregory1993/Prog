@@ -27,11 +27,35 @@ while True:
     with open('apitext.json', 'w') as myfile:
         myfile.write(json_leesbaar)
 
-    with open('Heroes.txt', 'w+', newline='') as file:
+    with open('Heroes.txt', 'w+', newline='') as file, open('Hero.json', 'w') as file2:
         for item in jsontext['data']['results']:
             if len((item['description'])) > 20:
                 print('hero gevonden')
                 file.write(item['name'] + ';' + str(item['description']) + '\n')
+                file.write('-----------------------Available Commics: ' + str(item['comics']['available']) + '-----------------------------\n')
+                all_comics = []
+                all_series = []
+                all_stories = []
+                for comics in item['comics']['items']:
+                    all_comics.append({'name': comics['name']},)
+                    file.write(comics['name'] + '\n')
+                file.write('-----------------------Available Series: ' + str(item['series']['available']) + '------------------------------\n')
+                for series in item['series']['items']:
+                    file.write(series['name'] + '\n')
+                    all_series.append({'name': series['name']}, )
+                file.write('-----------------------Available Stories: ' + str(item['stories']['available']) + '----------------------------\n')
+                for stories in item['stories']['items']:
+                    file.write(stories['name'] + '\n')
+                    all_stories.append({'name': stories['name']}, )
+                data = {'hero': {'name': item['name'], 'description': item['description'],
+                                 'comic': {'appearances comics': item['comics']['available'], 'items': all_comics},
+                                 'series': {'appearances series': item['series']['available'], 'items': [all_series]},
+                                 'stories': {'appearances stories': item['stories']['available'], 'items': [all_stories]
+                                             }
+                                 }
+                        }
+                json_data = json.dumps(data, indent=4)
+                file2.write(json_data)
                 counter += 1
             else:
                 print('nieuwe hero')

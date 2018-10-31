@@ -1,0 +1,73 @@
+{
+    "hero": {
+        "name": "Sunfire (Age of Apocalypse)",
+        "description": "During the beginning of Apocalypse's rise, Magneto approached Japan's greatest heroes, Sunfire and the Silver Samurai, and asked them to work with him and the X-Men to stop Apocalypse.",
+        "comic": {
+            "appearances comics": 7,
+            "items": [
+                {
+                    "name": "Astonishing X-Men (1995) #1"
+                },
+                {
+                    "name": "Astonishing X-Men (1995) #3"
+                },
+                {
+                    "name": "Astonishing X-Men (1995) #4"
+                },
+                {
+                    "name": "Uncanny X-Force (2010) #12"
+                },
+                {
+                    "name": "Uncanny X-Force (2010) #12 (I Am Captain America Variant)"
+                },
+                {
+                    "name": "Uncanny X-Force (2010) #12 (Kubert Variant)"
+                },
+                {
+                    "name": "X-Men: The Complete Age of Apocalypse Epic Book 3 (Trade Paperback)"
+                }
+            ]
+        },
+        "series": {
+            "appearances series": 3,
+            "items": [
+                [
+                    {
+                        "name": "Astonishing X-Men (1995)"
+                    },
+                    {
+                        "name": "Uncanny X-Force (2010 - 2012)"
+                    },
+                    {
+                        "name": "X-Men: The Complete Age of Apocalypse Epic Book 3 (2006)"
+                    }
+                ]
+            ]
+        },
+        "stories": {
+            "appearances stories": 6,
+            "items": [
+                [
+                    {
+                        "name": "Once More With Feeling"
+                    },
+                    {
+                        "name": "In Excess"
+                    },
+                    {
+                        "name": "Astonishing X-Men (1995) #4"
+                    },
+                    {
+                        "name": "Interior #73562"
+                    },
+                    {
+                        "name": "Interior #90807"
+                    },
+                    {
+                        "name": "Cover #90992"
+                    }
+                ]
+            ]
+        }
+    }
+}
