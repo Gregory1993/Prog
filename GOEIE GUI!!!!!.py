@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter.messagebox import showinfo
 from marvelapicall import *
 from tkinter.scrolledtext import ScrolledText
+import random
 
 public_key = "e236fca8413247cbbd3b6eab5a278226"
 private_key = "52fd65bb2019b663e26f555526b943dcfc1d5b2d"
@@ -16,13 +17,13 @@ points = 25
 heroDescrip = ''
 heroName = ''
 disguise = 'x'
-
+gebruikteHints = []
 
 global pointCount
 global playerName
 
 def kiesHero():
-    global heroName, heroDescrip
+    global heroName, hint
     with open('Hero.json') as read:
         data = json.load(read)
         heroName = data['hero']['name']
@@ -34,19 +35,39 @@ def kiesHero():
 
 
 def eersteHint():
-    global heroDescrip
+    global hint
     with open('Hero.json') as read:
         data = json.load(read)
-        heroDescrip = data['hero']['description']
-        if '.' in heroDescrip:
+        hint = data['hero']['description']
+        if '.' in hint:
 
-            print(heroDescrip)
+            print(hint)
+
+
+
+def nieuweHint():
+    global gebruikteHints
+    with open('Hero.json') as read:
+        while True:
+            data = json.load(read)
+            randomGetal = random.randrange(0,3)
+            randomStorieComicSerie = ['comics', 'series', 'stories']
+            lst = randomStorieComicSerie[randomGetal]
+            if int(data['hero'][lst]['appearances']) >= 20:
+                randomIndex = random.randrange(0, 19)
+            else:
+                randomIndex = random.randrange(0, int(data['hero'][lst]['appearances'])-1)
+            hint = data['hero'][lst]['items'][randomIndex]['name']
+            if hint in gebruikteHints:
+                continue
+            else:
+                gebruikteHints.append(hint)
+                print(hint)
+                break
 
 kiesHero()
 eersteHint()
-
-# def nieuweHint():
-
+nieuweHint()
 
 def toonLoginFrame():
     'Dit is het beginscherm'
@@ -72,7 +93,7 @@ def descripText(destroy = False):
         pointCount.pack_forget()
     pointCount = ScrolledText(root, height=8, width=50, padx=170, pady=50)
     pointCount.pack()
-    pointCount.insert(END, heroDescrip)
+    pointCount.insert(END, hint)
     pointCount.config(state=DISABLED)
     pointCount.tag_configure("center", justify='center')
     pointCount.tag_add("center", 1.0, "end")
@@ -146,7 +167,7 @@ loginfield1 = Entry(master=loginframe)
 loginfield1.pack(padx=20, pady=20)
 loginfield1.place(relx=1, x=-29, y=200, anchor=NE)
 hoofdframe.pack(fill="both", expand=True)
-hintbutton = Button(master=hoofdframe, text='Nieuwe hint (-3 punten!)', command=lambda:[puntenaftrek(),showpoints(True),checkpoints(points)])
+hintbutton = Button(master=hoofdframe, text='Nieuwe hint (-3 punten!)', command=lambda:[puntenaftrek(),showpoints(True),checkpoints(points), nieuweHint()])
 hintbutton.pack(side=LEFT, padx=20, pady=20)
 
 
