@@ -44,6 +44,29 @@ while True:
                             for stories in item['stories']['items']:
                                 all_stories.append({'name': stories['name']}, )
                             data = {'hero': {'name': item['name'], 'description': item['description'],
+                                             'comics': {'appearances': item['comics']['available'],
+                                                        'items': all_comics},
+                                             'series': {'appearances': item['series']['available'],
+                                                        'items': all_series},
+                                             'stories': {'appearances': item['stories']['available'],
+                                                         'items': all_stories
+                                                         }
+                                             }
+                                    }
+
+                            heroName = data['hero']['name']
+                            if '(' in heroName:
+                                heroName = (heroName[:heroName.find('(') - 1])
+                                if heroName in item['description']:
+                                    descriptionFilter = item['description'].replace(heroName, '********')
+                            elif heroName in item['description']:
+                                descriptionFilter = item['description'].replace(heroName, '********')
+                            else:
+                                descriptionFilter = item['description']
+
+
+                            print(heroName)
+                            data = {'hero': {'name': item['name'], 'description': descriptionFilter,
                                              'comics': {'appearances': item['comics']['available'], 'items': all_comics},
                                              'series': {'appearances': item['series']['available'], 'items': all_series},
                                              'stories': {'appearances': item['stories']['available'], 'items': all_stories
