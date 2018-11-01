@@ -1,0 +1,315 @@
+from tkinter import *
+from tkinter.messagebox import showinfo
+from marvelapicall import *
+from tkinter.scrolledtext import ScrolledText
+import random
+import datetime
+import csv
+
+global pointCount
+global playerName
+global HighScoreAlltime
+global HighScoreDaily
+import csv
+import time
+
+
+public_key = "e236fca8413247cbbd3b6eab5a278226"
+private_key = "52fd65bb2019b663e26f555526b943dcfc1d5b2d"
+counter = 0
+timestamp = str(time.time())
+hash = hashlib.md5( (timestamp+private_key+public_key).encode('utf-8') )
+md5digest = str(hash.hexdigest())
+url = "http://gateway.marvel.com:80/v1/public/characters"
+
+dataOpvragen()
+points = 25
+heroDescrip = ''
+heroName = ''
+gebruikteHints = []
+hint = ''
+
+
+def writeScoreNameDate():
+    'Eerst wordt er gekeken of de Daily highscore gereset moet worden. Daarna shrijft de naam, score, en datum naar beide Highscore csv files. '
+    global playerName, points, day
+    # kijkt of de dag vandaag overeen komt met de dag van de meest recente score. Als de dagen verschillen leegt het de dailhighscore file.
+    with open('DateCheck.txt', 'r') as myfile:
+        dagcheck = myfile.readline()
+        if dagcheck == '':
+            myfile.write(time.strftime('%A'))
+        if time.strftime('%A') != dagcheck:
+            with open('HighscoreDaily.csv', 'w') as myfile:
+                myfile.write('\'Name\', \'points\', \'Date\'\n')
+    date = time.strftime('%A %d %B %Y %H:%M:%S')
+    # De playername, score en datum worden in beide files geschreven.
+    with open('HighscoreAlltime.csv', 'a') as myfile:
+        myfile.write(playerName)
+        myfile.write(',')
+        myfile.write(str(points))
+        myfile.write(',')
+        myfile.write(date)
+        myfile.write('\n')
+    with open('HighscoreDaily.csv', 'a') as myfile:
+         myfile.write(playerName)
+         myfile.write(',')
+         myfile.write(str(points))
+         myfile.write(',')
+         myfile.write(date)
+         myfile.write('\n')
+    with open('DateCheck.txt', 'w') as myfile:
+        myfile.write(time.strftime('%A'))
+
+
+def saveHighscore():
+    HighscoreFileAanmaken()
+    writeScoreNameDate()
+
+def HighestScoreAlltime():
+    global HighScoreAlltime
+    'Zoekt de hoogste Score met de bijbehoorende naam en datum en slaat deze op in HighscoreAlltime.csv'
+    with open('HighscoreAlltime.csv', 'r') as myfile:
+        reader = csv.reader(myfile, delimiter=',')
+        next(reader,None)
+        hoogesteScoreAlltime = 0
+        highscorenameAlltime = ''
+        highscoredateAlltime = ''
+        for row in reader:
+            # Als er een hogere score dan de vorige voorbij komt overschrijft hij de score met de hogere score
+            if int(row[1]) >= int(hoogesteScoreAlltime):
+                hoogesteScoreAlltime = row[1]
+                highscorenameAlltime = row[0]
+                highscoredateAlltime = row[2]
+        print('De hoogste alltime score is behaald door {} met {} punten op {}'.format(highscorenameAlltime, hoogesteScoreAlltime, highscoredateAlltime))
+        HighScoreAlltime = 'De hoogste alltime score is behaald door {} met {} punten op {}'.format(highscorenameAlltime, hoogesteScoreAlltime, highscoredateAlltime)
+
+def HighestScoreDaily():
+    global HighScoreDaily
+    'Zoekt de hoogste Score met de bijbehoorende naam en datum en slaat deze op in HighscoreDaily.csv'
+    with open('HighscoreDaily.csv', 'r') as myfile:
+        reader = csv.reader(myfile, delimiter=',')
+        next(reader,None)
+        hoogesteScoreDaily = 0
+        highscorenameDaily = ''
+        highscoredateDaily = ''
+        for row in reader:
+            # Als er een hogere score dan de vorige voorbij komt overschrijft hij de score met de hogere score
+            if int(row[1]) >= int(hoogesteScoreDaily):
+                hoogesteScoreDaily = row[1]
+                highscorenameDaily = row[0]
+                highscoredateDaily = row[2]
+        print('De hoogste score vandaag is behaald door {} met {} punten op {}'.format(highscorenameDaily, hoogesteScoreDaily, highscoredateDaily))
+        HighScoreDaily = 'De hoogste score vandaag is behaald door {} met {} punten op {}'.format(highscorenameDaily, hoogesteScoreDaily, highscoredateDaily)
+
+def showHighscore():
+    HighestScoreAlltime()
+    HighestScoreDaily()
+
+def kiesHero():
+    global heroName, hint
+    with open('Hero.json') as read:
+        data = json.load(read)
+        heroName = data['hero']['name']
+
+    if '(' in heroName:
+         heroName = (heroName[:heroName.find('(') -1])
+    print(heroName)
+
+
+
+def eersteHint():
+    global hint
+    with open('Hero.json') as read:
+        data = json.load(read)
+        hint = data['hero']['description']
+        if '.' in hint:
+
+            print(hint)
+
+
+
+def nieuweHint():
+    global gebruikteHints, hint
+    with open('Hero.json') as read:
+        data = json.load(read)
+        while True:
+            randomGetal = random.randrange(0,3)
+            randomStorieComicSerie = ['comics', 'series', 'stories']
+            lst = randomStorieComicSerie[randomGetal]
+            if int(data['hero'][lst]['appearances']) >= 20:
+                randomIndex = random.randrange(0, 19)
+            else:
+                randomIndex = random.randrange(0, int(data['hero'][lst]['appearances'])-1)
+            hint = 'Deze superheld komt voor in: (' + lst + ')\n' + data['hero'][lst]['items'][randomIndex]['name']
+            if hint in gebruikteHints:
+                continue
+            else:
+                gebruikteHints.append(hint)
+                print('De hero komt voor in de ' + lst + ' :')
+                print(hint)
+                break
+
+#kiesHero()
+#eersteHint()
+#nieuweHint()
+
+def toonLoginFrame():
+    'Dit is het beginscherm'
+    hoofdframe.pack_forget()
+    loginframe.pack()
+
+def toonHoofdFrame():
+    'Dit is het spelscherm'
+    loginframe.pack_forget()
+    hoofdframe.pack()
+
+def login():
+    'Vraagt om de spelernaam'
+    global playerName
+    playerName = loginfield.get()
+    toonHoofdFrame()
+
+def descripText(destroy = False):
+    'Laat de puntentelling zien op het spelscherm'
+    T.pack_forget()
+    global hint, root, destxt
+    destxt = ScrolledText(root, height=8, width=50, padx=170, pady=50)
+    destxt.pack()
+    destxt.insert(END, hint)
+    destxt.config(state=DISABLED)
+    destxt.tag_configure("center", justify='center')
+    destxt.tag_add("center", 1.0, "end")
+    destxt.place(relx=1, x=-2, y=2, anchor=NE)
+
+
+
+def highscoreText():
+    global HighScoreAlltime, HighScoreDaily
+    showHighscore()
+    'Pop-up met de highscore'
+    bericht = HighScoreAlltime + '\n\n' + HighScoreDaily
+    showinfo(title='popup', message=bericht)
+
+
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+def checkAnswer():
+    global points
+    answerUser = answerField.get()
+    print(answerUser)
+    print(heroName)
+    if answerUser == heroName:
+        saveHighscore()
+        bericht = 'JE WINT!\n{} is geëindigd met {} punten!'.format(playerName, points)
+        showinfo(title='popup', message=bericht)
+        root.destroy()
+    else:
+        points -= 1
+
+def showpoints(destroy = False):
+    'Laat de puntentelling zien op het spelscherm'
+    T.pack_forget()
+    global pointCount
+    if destroy:
+        pointCount.pack_forget()
+    pointCount = Text(root, height=2, width=30)
+    pointCount.pack()
+    pointCount.insert(END, "Punten: {}".format(points))
+    pointCount.config(state=DISABLED)
+    pointCount.tag_configure("center", justify='center')
+    pointCount.tag_add("center", 1.0, "end")
+
+
+def puntenaftrek():
+    global points
+    if points >= 3:
+        points -= 3
+    elif points == 2:
+        points -= 2
+    elif points == 1:
+        points -= 1
+
+def checkpoints(points):
+    if points <= 0:
+        points = 0
+        showpoints(True)
+        bericht = 'Je bent af!\n{} is geëindigd met {} punten!\n Het goede antwoord was {}'.format(playerName, points, heroName)
+        showinfo(title='Loser', message=bericht)
+        root.destroy()
+
+
+def textweg():
+    'Haalt de introtekst weg wanneer je naar het spelscherm gaat'
+    T.pack_forget()
+
+def HighscoreFileAanmaken():
+    'Maakt de bestanden aan als deze nog niet bestaan.'
+    try:
+        myfile = open('HighscoreAlltime.csv', 'r')
+        myfile.close()
+
+    except FileNotFoundError:
+        with open('HighscoreAlltime.csv', 'w') as myfile:
+            myfile.write('\'Name\', \'Score\', \'Date\'\n')
+    try:
+        myfile = open('HighscoreDaily.csv', 'r')
+        myfile.close()
+
+    except FileNotFoundError:
+        with open('HighscoreDaily.csv', 'w') as myfile:
+            myfile.write('\'Name\', \'Score\', \'Date\'\n')
+    try:
+        myfile = open('DateCheck.txt', 'r')
+        myfile.close()
+    except FileNotFoundError:
+        with open('DateCheck.txt', 'w') as myfile:
+            myfile.write(time.strftime('%A'))
+
+
+
+root = Tk()
+T = Text(root, height=2, width=30)
+T.pack()
+T.insert(END, "Vul je naam in")
+T.config(state=DISABLED)
+T.tag_configure("center", justify='center')
+T.tag_add("center", 1.0, "end")
+
+#Code voor het beginscherm
+loginframe = Frame(master=root)
+loginframe.pack(fill="both", expand=True)
+loginfield = Entry(master=loginframe)
+loginfield.pack(padx=20, pady=20)
+
+loginbutton = Button(master=loginframe, text='Start', command=lambda:[login(),textweg(),showpoints(), eersteHint(), descripText(), kiesHero()])
+loginbutton.pack(side=LEFT, padx=20, pady=20)
+highscorebutton = Button(master=loginframe, text='View Highscore', command=lambda: [highscoreText(), showHighscore()])
+highscorebutton.pack(side=RIGHT, padx=20, pady=20)
+
+
+
+
+#Code voor het spelscherm
+hoofdframe = Frame(master=root)
+answerField = Entry(master=hoofdframe, text='API call hier')
+answerField.pack(padx=320, pady=250)
+#loginfield.place(relx=1, x=100, y=400, anchor=NE)
+hoofdframe.pack(fill="both", expand=True)
+hintbutton = Button(master=hoofdframe, text='Nieuwe hint (-3 punten!)', command=lambda:[puntenaftrek(),showpoints(True),checkpoints(points), nieuweHint(), descripText()])
+hintbutton.pack(side=LEFT, padx=20, pady=5)
+answerButton = Button(master=hoofdframe, text='Antwoord controleren!', command=lambda:[checkAnswer(), checkpoints(points), showpoints(True)])
+answerButton.pack(side=RIGHT, padx=20, pady=5)
+
+
+
+#Code voor het victoryScreen
+#victoryframe = Frame(master=root)
+#victoryLabel = Text(master=victoryframe, height=2, width=30)
+#victoryLabel.pack()
+#victoryLabel.insert(END, 'lekker bezig #doehetvoordiptish')
+
+toonLoginFrame()
+root.mainloop()
