@@ -2,14 +2,16 @@ import csv
 import json
 from threading import Timer
 
-while True:
+points = 12
+playerName = 'randomname'
 
-    fieldnames = ['type', 'username', 'score', 'ID']
-    username = input("What is your name? ")
-    score = int(input("What is your score? "))
+score = points
+
+
+    fieldnames = ['type', 'playerName', 'score', 'ID']
 
     class Structure:
-        username = ""
+        playerName = ""
         score = int(0)
         ID = int(0)
 
@@ -19,14 +21,14 @@ while True:
 
 
     def getOldScores():
-        with open('punten.csv') as file:
+        with open('punten.csv', 'r+') as file:
             csv_reader = csv.DictReader(file)
             for row in csv_reader:
                 if row["type"] == "alltime":
-                    alltime.username = row["username"]
+                    alltime.playerName = row["playerName"]
                     alltime.score = int(row["score"])
                 elif row["type"] == "daily":
-                    daily.username = row["username"]
+                    daily.playerName = row["playerName"]
                     daily.score = int(row["score"])
                     daily.ID = int(row["ID"])
 
@@ -36,9 +38,9 @@ while True:
         getOldScores()
         if score > alltime.score:
             sendMessage(0)
-            alltime.username = username
+            alltime.playerName = playerName
             alltime.score = score
-            daily.username = username
+            daily.playerName = playerName
             daily.score = score
             daily.ID = daily.ID + 1
             writeChanges()
@@ -46,7 +48,7 @@ while True:
             t.start()
         elif score > daily.score:
             sendMessage(1)
-            daily.username = username
+            daily.playerName = playerName
             daily.score = score
             daily.ID = daily.ID + 1
             writeChanges()
@@ -61,8 +63,8 @@ while True:
             writer = csv.DictWriter(file, fieldnames=fieldnames)
 
             writer.writeheader()
-            writer.writerow({'type': 'alltime', 'username': alltime.username, 'score': alltime.score})
-            writer.writerow({'type': 'daily', 'username': daily.username, 'score': daily.score, 'ID': daily.ID})
+            writer.writerow({'type': 'alltime', 'playerName': alltime.playerName, 'score': alltime.score})
+            writer.writerow({'type': 'daily', 'playerName': daily.playerName, 'score': daily.score, 'ID': daily.ID})
 
 
     def sendMessage(result):
@@ -76,7 +78,7 @@ while True:
     def resetDaily(dailyID):
         getOldScores()
         if int(dailyID) == int(daily.ID):
-            daily.username = "none"
+            daily.playerName = "none"
             daily.score = int(0)
             writeChanges()
             print("daily reset")
